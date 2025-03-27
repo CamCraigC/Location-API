@@ -40,21 +40,21 @@ app.post('/', async (req, res) => {
     const methodEndpoint = `https://rest.method.me/api/v1/tables/CustomSchedule/${recordId}`;
     console.log(`Forwarding request to Method:CRM endpoint: ${methodEndpoint}`);
 
-    // Log the full payload being sent to Method:CRM
+    // Convert latitude and longitude to strings before sending to Method:CRM
     const payload = {
-      ActualStartLatitude,
-      ActualStartLongitude,
+      ActualStartLatitude: String(ActualStartLatitude),
+      ActualStartLongitude: String(ActualStartLongitude),
     };
-    console.log('Payload being sent to Method:CRM:', JSON.stringify(payload, null, 2));
+    console.log('Payload being sent to Method:CRM (as strings):', JSON.stringify(payload, null, 2));
 
     // Send the PATCH request to Method:CRM API
     const response = await fetch(methodEndpoint, {
       method: 'PATCH',
       headers: {
-        'Content-Type': 'application/json',
-        Authorization: `APIKey ${authCode}`,
+        'Content-Type': 'application/json', // Ensure correct Content-Type header
+        Authorization: `APIKey ${authCode}`, // Include the Authorization header
       },
-      body: JSON.stringify(payload),
+      body: JSON.stringify(payload), // Send formatted payload
     });
 
     console.log('Response status from Method:CRM:', response.status);
@@ -74,9 +74,7 @@ app.post('/', async (req, res) => {
 });
 
 // Bind the server to Render's PORT environment variable or fallback to port 3000
-const PORT = process.env.PORT || 10000;
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
-
-
