@@ -5,7 +5,7 @@ const fetch = require('node-fetch'); // Using node-fetch v2
 const app = express();
 
 // Enable CORS for specific origins (your GitHub Pages domain)
-const allowedOrigins = ['https://camperja.github.io'];
+const allowedOrigins = ['https://CamCraigC.github.io/Update-Location'];
 app.use(cors({
   origin: function (origin, callback) {
     if (!origin || allowedOrigins.includes(origin)) {
