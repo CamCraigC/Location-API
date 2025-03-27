@@ -6,7 +6,7 @@ const app = express();
 
 // Enable CORS for your GitHub Pages domain
 app.use(cors({
-  origin: 'https://CamCraigC.github.io', // Replace with your actual GitHub Pages URL
+  origin: 'https://camcraigc.github.io/Update-Location/', // Replace with your actual GitHub Pages URL
   methods: ['GET', 'POST', 'PATCH'], // Specify allowed methods
   allowedHeaders: ['Content-Type', 'Authorization'] // Specify allowed headers
 }));
