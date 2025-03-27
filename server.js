@@ -40,6 +40,13 @@ app.post('/', async (req, res) => {
     const methodEndpoint = `https://rest.method.me/api/v1/tables/CustomSchedule/${recordId}`;
     console.log(`Forwarding request to Method:CRM endpoint: ${methodEndpoint}`);
 
+    // Log the full payload being sent to Method:CRM
+    const payload = {
+      ActualStartLatitude,
+      ActualStartLongitude,
+    };
+    console.log('Payload being sent to Method:CRM:', JSON.stringify(payload, null, 2));
+
     // Send the PATCH request to Method:CRM API
     const response = await fetch(methodEndpoint, {
       method: 'PATCH',
@@ -47,18 +54,17 @@ app.post('/', async (req, res) => {
         'Content-Type': 'application/json',
         Authorization: `APIKey ${authCode}`,
       },
-      body: JSON.stringify({
-        ActualStartLatitude,
-        ActualStartLongitude,
-      }),
+      body: JSON.stringify(payload),
     });
+
+    console.log('Response status from Method:CRM:', response.status);
 
     if (response.status === 204) {
       console.log('Record updated successfully.');
       return res.status(200).json({ message: 'Record updated successfully.' });
     } else {
       const errorData = await response.json();
-      console.error('Error from Method:CRM:', errorData);
+      console.error('Error from Method:CRM:', JSON.stringify(errorData, null, 2));
       return res.status(response.status).json(errorData);
     }
   } catch (error) {
@@ -72,7 +78,5 @@ const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
-
-
 
 
