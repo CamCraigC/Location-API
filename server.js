@@ -28,33 +28,33 @@ app.use(express.json());
 app.post('/', async (req, res) => {
   console.log('Incoming request at root endpoint:', JSON.stringify(req.body, null, 2));
 
-  const { recordId, authCode, ActualStartLatitude, ActualStartLongitude } = req.body;
+  const { recordId, authCode, table, latitudeField, longitudeField, latitudeValue, longitudeValue } = req.body;
 
   // Validate required parameters
-  if (!recordId || !authCode || !ActualStartLatitude || !ActualStartLongitude) {
-    console.error('Missing parameters in request body.');
-    return res.status(400).json({ error: 'Missing required parameters.' });
+  if (!recordId || !authCode || !table || !latitudeField || !longitudeField || !latitudeValue || !longitudeValue) {
+    console.error('Missing required parameters in request body.');
+    return res.status(400).json({ error: 'Missing required parameters in request body.' });
   }
 
   try {
-    const methodEndpoint = `https://rest.method.me/api/v1/tables/CustomSchedule/${recordId}`;
+    const methodEndpoint = `https://rest.method.me/api/v1/tables/${table}/${recordId}`;
     console.log(`Forwarding request to Method:CRM endpoint: ${methodEndpoint}`);
 
-    // Convert latitude and longitude to strings before sending to Method:CRM
-    const payload = {
-      ActualStartLatitude: String(ActualStartLatitude),
-      ActualStartLongitude: String(ActualStartLongitude),
+    // Create dynamic fields object for latitude and longitude
+    const fields = {
+      [latitudeField]: latitudeValue,
+      [longitudeField]: longitudeValue,
     };
-    console.log('Payload being sent to Method:CRM (as strings):', JSON.stringify(payload, null, 2));
+    console.log('Payload being sent to Method:CRM:', JSON.stringify(fields, null, 2));
 
     // Send the PATCH request to Method:CRM API
     const response = await fetch(methodEndpoint, {
       method: 'PATCH',
       headers: {
-        'Content-Type': 'application/json', // Ensure correct Content-Type header
-        Authorization: `APIKey ${authCode}`, // Include the Authorization header
+        'Content-Type': 'application/json',
+        Authorization: `APIKey ${authCode}`,
       },
-      body: JSON.stringify(payload), // Send formatted payload
+      body: JSON.stringify(fields),
     });
 
     console.log('Response status from Method:CRM:', response.status);
@@ -74,7 +74,7 @@ app.post('/', async (req, res) => {
 });
 
 // Bind the server to Render's PORT environment variable or fallback to port 3000
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
