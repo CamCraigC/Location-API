@@ -9,7 +9,8 @@ app.use(
   cors({
     origin: function (origin, callback) {
       // Allow requests from *.github.io or same-site requests
-      if (!origin || origin.endsWith('github.io')) {
+      if (!origin || origin.endsWith('github.io'))   || 
+    origin.endsWith('templatescrm.ca'){
         callback(null, true);
       } else {
         console.error('Blocked by CORS:', origin); // Log blocked origin
